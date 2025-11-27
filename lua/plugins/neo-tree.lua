@@ -13,6 +13,7 @@ return {
         mappings = {
           ['h'] = 'close_node',
           ['l'] = 'open',
+          ['<space>'] = 'none',
         },
       },
       filesystem = {

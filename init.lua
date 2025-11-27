@@ -102,9 +102,6 @@ vim.o.confirm = true
 --
 --
 --
---
---
---
 --  WARNING: [[ Custom Keymaps ]]
 --
 --
@@ -135,7 +132,6 @@ vim.keymap.set('n', 's', '"_s', { desc = 'Substitute Char to Blackhole' })
 vim.keymap.set('x', 'y', '"+y', { desc = 'Yank Visual to System Clipboard' })
 vim.keymap.set('x', 'd', '"_d', { desc = 'Delete Visual to Blackhole' })
 vim.keymap.set('x', 'c', '"_c', { desc = 'Change Visual to Blackhole' })
--- xnoremap x "+x
 vim.keymap.set('x', 'x', '"+x', { desc = 'Cut Visual to System Clipboard' })
 vim.keymap.set('x', 's', '"_s', { desc = 'Substitute Visual to Blackhole' })
 
@@ -152,15 +148,12 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Keybinds to make split navigation easier. --
---  Use <leader>+<hjkl> to switch between windows --
+--  Use <Control>+<hjkl> to switch between windows --
 vim.keymap.set('n', '<leader>h', '<C-w><C-h>', { desc = 'Move focus to the left window' })
 vim.keymap.set('n', '<leader>l', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<leader>j', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<leader>k', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
---
---
---
 --
 --
 --
@@ -200,38 +193,36 @@ rtp:prepend(lazypath)
 --  WARNING: [[ Cutom Plugins ]]
 --
 --
-require('lazy').setup(
-  {
-    { import = 'plugins' },
-    { import = 'plugins.LSP' },
-    { import = 'plugins.themes' },
-    { import = 'plugins.visual' },
-  },
-  --
-  --
-  --
-  -- WARNING: [[ Random ]]
-  --
-  --
-  {
-    ui = {
-      -- If you are using a Nerd Font: set icons to an empty table which will use the
-      -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
-      icons = vim.g.have_nerd_font and {} or {
-        cmd = '⌘',
-        config = '🛠',
-        event = '📅',
-        ft = '📂',
-        init = '⚙',
-        keys = '🗝',
-        plugin = '🔌',
-        runtime = '💻',
-        require = '🌙',
-        source = '📄',
-        start = '🚀',
-        task = '📌',
-        lazy = '💤 ',
-      },
+require('lazy').setup({
+  { import = 'plugins' },
+  { import = 'plugins.LSP' },
+  { import = 'plugins.themes' },
+  { import = 'plugins.visual' },
+}, {
+  ui = {
+    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+    icons = vim.g.have_nerd_font and {} or {
+      cmd = '⌘',
+      config = '🛠',
+      event = '📅',
+      ft = '📂',
+      init = '⚙',
+      keys = '🗝',
+      plugin = '🔌',
+      runtime = '💻',
+      require = '🌙',
+      source = '📄',
+      start = '🚀',
+      task = '📌',
+      lazy = '💤 ',
     },
-  }
-)
+  },
+})
+--
+--
+--
+--
+--  WARNING: [[ Random ]]
+--
+--

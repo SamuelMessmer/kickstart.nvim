@@ -8,7 +8,7 @@ return { -- Autoformat
         require('conform').format { async = true, lsp_fallback = false }
       end,
       mode = '',
-      desc = '[F]ormat buffer',
+      desc = '[F]ormat Code',
     },
   },
   opts = {

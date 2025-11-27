@@ -15,12 +15,22 @@ return { -- Füge 'return' am Anfang hinzu
     -- Useful for getting pretty icons, but requires a Nerd Font.
   },
   config = function()
-    -- [[ Configure Telescope ]]
-    -- ... [Der gesamte Setup-Code von require('telescope').setup bis zur letzten Keymap] ...
+    local actions = require 'telescope.actions'
+
     require('telescope').setup {
       extensions = {
         ['ui-select'] = {
           require('telescope.themes').get_dropdown(),
+        },
+      },
+      defaults = {
+        mappings = {
+          -- Schließe Telescope auch mit 'q' --
+          n = {
+            ['q'] = actions.close, -- Schließt Telescope mit q
+            ['<Esc>'] = actions.close, -- Schließt Telescope mit Esc
+            ['l'] = actions.select_default,
+          },
         },
       },
     }
@@ -31,47 +41,42 @@ return { -- Füge 'return' am Anfang hinzu
 
     -- See `:help telescope.builtin`
     local builtin = require 'telescope.builtin'
-
-    function find_restricted_files()
-      builtin.find_files {
-        cwd = vim.fn.getcwd(),
-        prompt_title = 'Search in current Folder',
-        hidden = true,
-      }
-    end
-
     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[s]earch [h]elp' })
     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[s]earch [k]eymaps' })
-    vim.keymap.set('n', '<leader>sf', find_restricted_files, { desc = '[s]earch [f]iles' })
-    vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[s]earch [s]elect telescope' })
-    vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[s]earch current [w]ord' })
-    vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[s]earch by [g]rep' })
-    vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[s]earch [d]iagnostics' })
-    vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[s]earch [r]esume' })
-    vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[s]earch recent files ("." for repeat)' })
-    vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] find existing buffers' })
-
+    vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[s]earch [f]iles' })
+    vim.keymap.set('n', '<leader>sr', builtin.oldfiles, { desc = '[s]earch recent files ("r" for recent)' })
     -- Slightly advanced example of overriding default behavior and theme
+    -- You can pass additional configuration to Telescope to change the theme, layout, etc.
     vim.keymap.set('n', '<leader>/', function()
-      -- You can pass additional configuration to Telescope to change the theme, layout, etc.
       builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
         winblend = 10,
         previewer = false,
       })
     end, { desc = '[/] Fuzzily search in current buffer' })
 
-    -- It's also possible to pass additional configuration options.
-    -- See `:help telescope.builtin.live_grep()` for information about particular keys
-    vim.keymap.set('n', '<leader>s/', function()
-      builtin.live_grep {
-        grep_open_files = true,
-        prompt_title = 'Live Grep in Open Files',
-      }
-    end, { desc = '[S]earch [/] in Open Files' })
-
     -- Shortcut for searching your Neovim configuration files
     vim.keymap.set('n', '<leader>sn', function()
       builtin.find_files { cwd = vim.fn.stdpath 'config' }
     end, { desc = '[S]earch [N]eovim files' })
+
+    --
+    --
+    --
+    --
+    --
+    --  WARNING:
+    --
+    -- vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[s]earch by [g]rep' })
+    -- vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[s]earch [r]esume' })
+    -- vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] find existing buffers' })
+
+    -- It's also possible to pass additional configuration options.
+    -- See `:help telescope.builtin.live_grep()` for information about particular keys
+    -- vim.keymap.set('n', '<leader>s/', function()
+    --   builtin.live_grep {
+    --     grep_open_files = true,
+    --     prompt_title = 'Live Grep in Open Files',
+    --   }
+    -- end, { desc = '[S]earch [/] in Open Files' })
   end,
 }
