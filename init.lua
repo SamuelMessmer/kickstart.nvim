@@ -51,6 +51,12 @@ end)
 -- Das Zeilen automatisch umbrechen
 vim.o.breakindent = true
 
+-- Tab indetation like in vs code
+vim.opt.smartindent = false
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+
 -- Save undo history
 vim.o.undofile = true
 
@@ -100,8 +106,6 @@ vim.o.confirm = true
 --
 --
 --
---
---
 --  WARNING: [[ Custom Keymaps ]]
 --
 --
@@ -110,9 +114,8 @@ vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit Insert Mode with jk' })
 vim.keymap.set('i', 'kj', '<Esc>', { desc = 'Exit Insert Mode with kj' })
 
 -- toggle neo-tree --
-vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { desc = 'NeoTree öffnen/schließen' })
-vim.keymap.set('n', '<leader>E', ':Neotree reveal<CR>', { desc = 'Datei im NeoTree zeigen' })
-vim.keymap.set('i', 'jk', '<Esc>', { desc = 'Exit Insert Mode with jk' })
+vim.keymap.set('n', '<leader>f', ':Neotree toggle<CR>', { desc = 'NeoTree öffnen/schließen' })
+vim.keymap.set('n', '<leader>F', ':Neotree reveal<CR>', { desc = 'Datei im NeoTree zeigen' })
 
 -- System-Clipboard für Yank & Paste --
 vim.keymap.set('n', 'y', '"+y', { desc = 'Yank to System Clipboard' })
@@ -141,7 +144,7 @@ vim.keymap.set('n', 'K', 'O<Esc>', { desc = 'Insert Line Above' })
 -- Redo auf Großbuchstabe U legen --
 vim.keymap.set('n', 'U', '<C-r>', { desc = 'Redo (Wiederherstellen)' })
 
--- Clear highlighted words on search '/' when pressing <Esc> in normal mode
+-- Clear highlighted words on search '/' when pressing <Esc> in normal mode --
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps --
@@ -149,12 +152,40 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 
 -- Keybinds to make split navigation easier. --
 --  Use <Control>+<hjkl> to switch between windows --
-vim.keymap.set('n', '<leader>h', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<leader>l', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<leader>j', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<leader>k', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
---
+vim.keymap.set({ 'n', 'x' }, '<leader>h', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+vim.keymap.set({ 'n', 'x' }, '<leader>l', '<C-w><C-l>', { desc = 'Move focus to the right window' })
+vim.keymap.set({ 'n', 'x' }, '<leader>j', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
+vim.keymap.set({ 'n', 'x' }, '<leader>k', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set({ 'n', 'x' }, '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
+
+-- LSP & Diagnostics --
+-- Hover-Dokumentation anzeigen (wenn du auf einem Wort bist) --
+vim.keymap.set({ 'n', 'x' }, 'tt', vim.lsp.buf.hover, { desc = 'Show Hover Documentation' })
+-- F    hlermeldung der aktuellen Zeile in einem Fenster anzeigen --
+vim.keymap.set({ 'n', 'x' }, '<leader>e', vim.diagnostic.open_float, { desc = 'Show Line Diagnostics' })
+
+-- Fenster Größe ändern --
+--  '+' macht das Fenster BREITER
+--  '-' macht das Fenster SCHMÄLER
+vim.keymap.set('n', '+', ':vertical resize +5<CR>', { desc = 'Fenster vergrößern (Breite)' })
+vim.keymap.set('n', '-', ':vertical resize -5<CR>', { desc = 'Fenster verkleinern (Breite)' })
+
+-- horizontale Breite anpassen mit <leader>+ und <leader>
+vim.keymap.set('n', '<leader>+', ':resize +5<CR>', { desc = 'Fenster vergrößern (Höhe)' })
+vim.keymap.set('n', '<leader>-', ':resize -5<CR>', { desc = 'Fenster verkleinern (Höhe)' })
+
+-- Deaktiviert 'u' im Visual Mode, damit Code nicht versehentlich kleingeschrieben wird
+vim.keymap.set('x', 'u', '<Nop>', { desc = 'Do nothing on u in visual mode' })
+-- auch für shift+U möglich brauche ich aber wahrscheinlich nie...
+-- vim.keymap.set('x', 'U', '<Nop>', { desc = 'Do nothing on U in visual mode' })
+-- [[ Insert Mode Tricks ]] --
+
+-- Erlaube Opt+Backspace (Alt+Backspace) um ein Wort rückwärts zu löschen
+vim.keymap.set('i', '<M-BS>', '<C-w>', { desc = 'Delete previous word' })
+vim.keymap.set('c', '<M-BS>', '<C-w>', { desc = 'Delete previous word in command mode' })
+
+-- Verlasse den Visual Mode einfach mit 'q' (statt Esc)
+vim.keymap.set('v', 'q', '<Esc>', { desc = 'Exit Visual Mode' })
 --
 --
 --
