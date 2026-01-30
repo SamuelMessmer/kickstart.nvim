@@ -53,7 +53,11 @@ return {
       builtin.find_files(normal_mode)
     end, { desc = '[s]earch [f]iles' })
     vim.keymap.set({ 'n', 'x' }, '<leader>sr', function()
-      builtin.oldfiles(normal_mode)
+      builtin.oldfiles(vim.tbl_extend('force', normal_mode, {
+        cwd_only = true, -- Faster filtering
+        previewer = false, -- Skip preview for speed
+        -- only_cwd = true, -- Only show files from current project
+      }))
     end, { desc = '[s]earch recent files ("r" for recent)' })
     vim.keymap.set({ 'n', 'x' }, '<leader>sg', function()
       builtin.live_grep(normal_mode)
