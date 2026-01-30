@@ -75,7 +75,80 @@ return {
     vim.keymap.set({ 'n', 'x' }, '<leader>sn', function()
       builtin.find_files { cwd = vim.fn.stdpath 'config' }
     end, { desc = '[S]earch [N]eovim files' })
-    --
+
+    -- ==========================================
+    -- HARPOON-STYLE RECENT FILES NAVIGATION
+    -- ==========================================
+    local MAX_RECENT_FILES = 20
+    local NUM_HARPOON_KEYS = 5
+    local recent_files = {}
+
+    local function is_valid_project_file(file, cwd)
+      return file ~= '' and vim.startswith(file, cwd) and vim.fn.filereadable(file) == 1
+    end
+
+    local function add_to_recent(file)
+      -- Remove duplicate if exists
+      for i, f in ipairs(recent_files) do
+        if f == file then
+          table.remove(recent_files, i)
+          break
+        end
+      end
+      -- Prepend and trim to max
+      table.insert(recent_files, 1, file)
+      if #recent_files > MAX_RECENT_FILES then
+        table.remove(recent_files)
+      end
+    end
+
+    local function get_recent_at_index(index)
+      local current_file = vim.api.nvim_buf_get_name(0)
+      local count = 0
+      for _, file in ipairs(recent_files) do
+        if file ~= current_file then
+          count = count + 1
+          if count == index then
+            return file
+          end
+        end
+      end
+      return nil
+    end
+
+    -- Initialize from oldfiles
+    local cwd = vim.fn.getcwd()
+    for _, file in ipairs(vim.v.oldfiles) do
+      if #recent_files >= MAX_RECENT_FILES then
+        break
+      end
+      if is_valid_project_file(file, cwd) then
+        add_to_recent(file)
+      end
+    end
+
+    -- Track files on buffer enter
+    vim.api.nvim_create_autocmd('BufEnter', {
+      callback = function()
+        local file = vim.api.nvim_buf_get_name(0)
+        if is_valid_project_file(file, vim.fn.getcwd()) then
+          add_to_recent(file)
+        end
+      end,
+    })
+
+    -- Keymaps <leader>1 to <leader>N
+    for i = 1, NUM_HARPOON_KEYS do
+      vim.keymap.set('n', '<leader>' .. i, function()
+        local file = get_recent_at_index(i)
+        if file then
+          vim.cmd('edit ' .. vim.fn.fnameescape(file))
+          print('Harpoon [' .. i .. ']: ' .. vim.fn.fnamemodify(file, ':t'))
+        else
+          print('No recent file at position ' .. i)
+        end
+      end, { desc = 'Recent file ' .. i })
+    end
     --
     --
     --
